@@ -8,7 +8,7 @@ const users: Record<string, user> = {}
 
 const checkInvalid = (val: any): boolean => (val === undefined || val === null)
 
-export function findUserCredentials(username: string, password: string): number
+export function userCredentialsValidate(username: string, password: string): number
 {
     if (checkInvalid(username) || checkInvalid(password))
     {
@@ -29,7 +29,7 @@ export function findUserCredentials(username: string, password: string): number
     return credential.id
 }
 
-export function addUserCredentials(username: string, password: string): number
+export function userCredentialsAdd(username: string, password: string): number
 {
     if (checkInvalid(username) || checkInvalid(password))
     {
@@ -45,4 +45,19 @@ export function addUserCredentials(username: string, password: string): number
     const userData: user = { username, password, id }
     users[username] = userData
     return id
+}
+
+export function userCredentialsFind(username: string): user | null
+{
+    if (checkInvalid(username))
+    {
+      throw new Error("Username is invalid.")
+    } 
+
+    if (users.hasOwnProperty(username))
+    { 
+        const userFound: user | undefined = users[username]
+        return userFound === undefined ? null : userFound
+    }
+    return null
 }
