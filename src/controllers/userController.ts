@@ -12,7 +12,8 @@ export function userLogin(req: Request, res: Response): void
     {
         const { username, password }: userInfoProp = req.body
         const id: number = userCredentialsValidate(username, password)
-        res.send({ message: "User successfully logged in.", id })
+        res.cookie("id", id)
+        res.send({ message: "User successfully logged in." })
     }
     catch (e)
     {
