@@ -1,1 +1,1 @@
-# chess_game_server
+# chess_player_server
