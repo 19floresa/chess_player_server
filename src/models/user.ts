@@ -52,13 +52,13 @@ export class UserModel
         }
     }
 
-    async find(id: number)
+    async find(playerId: number)
     {
         if (checkInvalid(id))
         {
             throw new Error("Username is invalid.")
         } 
-        const [ status, _ ] = await postFetch({ playerId: id }, "find")
+        const [ status, _ ] = await postFetch({ playerId }, "find")
         if (status !== 200)
         {
             throw new Error("User was not found.")

@@ -35,17 +35,13 @@ export async function userRegister(req: Request, res: Response): Promise<void>
     }
 }
 
-export function userFind(req: Request, res: Response): void
+export async function userFind(req: Request, res: Response): Promise<void>
 {
     try 
     {
-        const { username, password }: userInfoProp = req.body
-        // const userInfo: user | null = userCredentialsFind(username) // TODO: Might not want directly use password
-        // if (userInfo === null)
-        // {
-        //     throw new Error("User was not found.")
-        // }
-        res.send({ message: "User found!" })
+        const { id } = req.body
+        await userModel.find(id)
+        res.send({ message: "User was found!" })
     }
     catch (e)
     {
