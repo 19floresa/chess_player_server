@@ -1,63 +1,69 @@
-export interface user { 
-    username: string; 
-    password: string; 
-    id: number; 
-}
-
-const users: Record<string, user> = {}
-
 const checkInvalid = (val: any): boolean => (val === undefined || val === null)
-
-export function userCredentialsValidate(username: string, password: string): number
+function checkCredentials(username: string, password: string)
 {
     if (checkInvalid(username) || checkInvalid(password))
     {
       throw new Error("Username or password is invalid.")
     }
-
-    if (!users.hasOwnProperty(username))
-    {
-      throw new Error("Username is not registered.")
-    }
-
-    const credential: user = users[username] as user // ts does like that it can be undefined
-    if (credential.password !== password)
-    {
-      throw new Error("Invalid password.")
-    }
-
-    return credential.id
 }
 
-export function userCredentialsAdd(username: string, password: string): number
+function generateTime(): string
 {
-    if (checkInvalid(username) || checkInvalid(password))
-    {
-      throw new Error("Username or password is invalid.")
-    }
-
-    if (users.hasOwnProperty(username))
-    {
-      throw new Error("Username is already registered.")
-    }
-
-    const id = Math.floor(Math.random() * 4294967295) // largest number for a 32-bit unsigned
-    const userData: user = { username, password, id }
-    users[username] = userData
-    return id
+    const date = new Date()
+    return date.toUTCString()
 }
 
-export function userCredentialsFind(username: string): user | null
+async function postFetch(data: any, cmd: string): Promise< [ number, any ] >
 {
-    if (checkInvalid(username))
-    {
-      throw new Error("Username is invalid.")
-    } 
-
-    if (users.hasOwnProperty(username))
+    const res = await fetch(`http://localhost:3078/database/${cmd}`, 
     { 
-        const userFound: user | undefined = users[username]
-        return userFound === undefined ? null : userFound
-    }
-    return null
+        method: 'POST', 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    const body: any = await res.json()
+    return [ res.status, body ]
 }
+
+export class UserModel 
+{
+    async add(username: string, password: string): Promise<void>
+    {
+        checkCredentials(username, password)
+        const time_created = generateTime()
+        const [ status, _ ] = await postFetch({ username, password, time_created }, "user")
+        if (status !== 200)
+        {
+            throw new Error("User could not be created.")
+        }
+    }
+
+    async validate(username: string, password: string): Promise< number >
+    {
+        checkCredentials(username, password)
+        const [ status, body ] = await postFetch({ username, password }, "validate")
+        if (status === 200)
+        {
+            return body.id
+        }
+        else
+        {
+            throw new Error("User could not be validated.")
+        }
+    }
+
+    async find(id: number)
+    {
+        if (checkInvalid(id))
+        {
+            throw new Error("Username is invalid.")
+        } 
+        const [ status, _ ] = await postFetch({ playerId: id }, "find")
+        if (status !== 200)
+        {
+            throw new Error("User was not found.")
+        }
+    }
+}
+
+export const userModel = new UserModel()
