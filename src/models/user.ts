@@ -54,7 +54,7 @@ export class UserModel
 
     async find(playerId: number)
     {
-        if (checkInvalid(id))
+        if (checkInvalid(playerId))
         {
             throw new Error("Username is invalid.")
         } 
