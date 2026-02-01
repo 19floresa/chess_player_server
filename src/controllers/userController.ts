@@ -13,6 +13,7 @@ export async function userLogin(req: Request, res: Response): Promise<void>
         const { username, password }: userInfoProp = req.body
         const id: number = await userModel.validate(username, password)
         res.cookie("id", id)
+        res.cookie("username", username)
         res.send({ message: "User successfully logged in." })
     }
     catch (e)
