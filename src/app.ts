@@ -11,7 +11,7 @@ const app = express()
 app.use(cors({
     origin: '*',//'http://gui:3000',
     methods: ['GET', 'POST',],
-    allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+    allowedHeaders: [ 'Access-Control-Allow-Origin','Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
     credentials: true
 }))
 
