@@ -10,6 +10,7 @@ export async function userLogin(req: Request, res: Response): Promise<void>
 {
     try 
     {
+        console.log("Logged in a user.")
         const { username, password }: userInfoProp = req.body
         const id: number = await userModel.validate(username, password)
         res.cookie("id", id)
@@ -41,6 +42,7 @@ export async function userFind(req: Request, res: Response): Promise<void>
 {
     try 
     {
+        console.log("Found a new user.")
         const { id } = req.body
         await userModel.find(id)
         res.send({ message: "User was found!" })
