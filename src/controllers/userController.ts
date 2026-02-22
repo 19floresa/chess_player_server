@@ -26,6 +26,7 @@ export async function userRegister(req: Request, res: Response): Promise<void>
 {
     try 
     {
+        console.log("Registering a new user.")
         const { username, password }: userInfoProp = req.body
         await userModel.add(username, password)
         res.send({ message: "User successfully registered." })
